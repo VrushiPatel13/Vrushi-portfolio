@@ -1,0 +1,15 @@
+# Normalise line endings so a Windows checkout and Vercel's Linux build
+# runners agree, and diffs stay clean.
+* text=auto eol=lf
+
+# Binary assets — never touch these.
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.avif  binary
+*.woff  binary
+*.woff2 binary
+*.ico   binary

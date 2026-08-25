@@ -5,13 +5,13 @@ import { motion, useReducedMotion } from "framer-motion";
 /**
  * Hand-built line diagrams — one per project — instead of stock screenshots.
  * Each shows the actual mechanism of the system it describes, drawn in the
- * same two inks as the rest of the page: cream on stock, marigold for emphasis.
+ * cabinet's own inks: cyan for signal, magenta for faults, green for healthy.
  */
 
-const ACCENT = "#e9a63c";
+const ACCENT = "#22e8ff";
 const FRAME = "0 0 480 300";
 
-const dim = (o: number) => `rgba(233,226,215,${o})`;
+const dim = (o: number) => `rgba(234,234,255,${o})`;
 
 function Plate({ label }: { label: string }) {
   return (
@@ -23,7 +23,7 @@ function Plate({ label }: { label: string }) {
         fontSize="9"
         letterSpacing="2.2"
         fill={ACCENT}
-        fontFamily="var(--font-mono)"
+        fontFamily="var(--font-display)"
       >
         {label.toUpperCase()}
       </text>
@@ -57,7 +57,7 @@ function ShelfVision({ still }: { still: boolean }) {
                   width="52"
                   height="50"
                   fill={isEmpty ? "none" : dim(0.06)}
-                  stroke={isEmpty ? "rgba(210,105,74,0.7)" : dim(0.14)}
+                  stroke={isEmpty ? "rgba(255,61,154,0.85)" : dim(0.14)}
                   strokeDasharray={isEmpty ? "3 3" : undefined}
                 />
                 {!isEmpty && (
@@ -86,8 +86,8 @@ function ShelfVision({ still }: { still: boolean }) {
                     textAnchor="middle"
                     fontSize="8"
                     letterSpacing="1"
-                    fill="rgba(210,105,74,0.95)"
-                    fontFamily="var(--font-mono)"
+                    fill="rgba(255,61,154,1)"
+                    fontFamily="var(--font-display)"
                   >
                     OOS
                   </text>
@@ -111,8 +111,8 @@ function ShelfVision({ still }: { still: boolean }) {
         />
       )}
 
-      <g fontFamily="var(--font-mono)" fontSize="9" letterSpacing="1.4">
-        <text x="30" y="278" fill="rgba(210,105,74,0.95)">
+      <g fontFamily="var(--font-display)" fontSize="9" letterSpacing="1.4">
+        <text x="30" y="278" fill="rgba(255,61,154,1)">
           3 STOCKOUTS · PRIORITY 1
         </text>
         <text x="450" y="278" textAnchor="end" fill={dim(0.5)}>
@@ -147,7 +147,7 @@ function RagGraph({ still }: { still: boolean }) {
         fontSize="8"
         letterSpacing="1.4"
         fill={dim(0.45)}
-        fontFamily="var(--font-mono)"
+        fontFamily="var(--font-display)"
       >
         CORPUS
       </text>
@@ -195,7 +195,7 @@ function RagGraph({ still }: { still: boolean }) {
         fontSize="8"
         letterSpacing="1.4"
         fill={dim(0.45)}
-        fontFamily="var(--font-mono)"
+        fontFamily="var(--font-display)"
       >
         VECTOR INDEX
       </text>
@@ -229,14 +229,14 @@ function RagGraph({ still }: { still: boolean }) {
         fontSize="8"
         letterSpacing="1.4"
         fill={ACCENT}
-        fontFamily="var(--font-mono)"
+        fontFamily="var(--font-display)"
       >
         ANSWER
       </text>
       <rect x="366" y="144" width="72" height="3" fill={dim(0.25)} />
       <rect x="366" y="153" width="58" height="3" fill={dim(0.18)} />
       <rect x="366" y="162" width="66" height="3" fill={dim(0.18)} />
-      <g fontFamily="var(--font-mono)" fontSize="7" fill={ACCENT}>
+      <g fontFamily="var(--font-display)" fontSize="7" fill={ACCENT}>
         <text x="366" y="180">
           [1]
         </text>
@@ -316,7 +316,7 @@ function RouteMap({ still }: { still: boolean }) {
 
       {stops.map((s, i) => (
         <g key={s.label}>
-          <circle cx={s.x} cy={s.y} r="11" fill="#0c0b0a" stroke={ACCENT} strokeOpacity="0.55" />
+          <circle cx={s.x} cy={s.y} r="11" fill="#05030f" stroke={ACCENT} strokeOpacity="0.55" />
           <circle cx={s.x} cy={s.y} r="3.5" fill={ACCENT} />
           <text
             x={s.x}
@@ -325,7 +325,7 @@ function RouteMap({ still }: { still: boolean }) {
             fontSize="8"
             letterSpacing="1.2"
             fill={dim(0.55)}
-            fontFamily="var(--font-mono)"
+            fontFamily="var(--font-display)"
           >
             {s.label}
           </text>
@@ -335,14 +335,14 @@ function RouteMap({ still }: { still: boolean }) {
             textAnchor="middle"
             fontSize="8"
             fill={dim(0.3)}
-            fontFamily="var(--font-mono)"
+            fontFamily="var(--font-display)"
           >
             0{i + 1}
           </text>
         </g>
       ))}
 
-      <g fontFamily="var(--font-mono)" fontSize="9" letterSpacing="1.4" fill={dim(0.5)}>
+      <g fontFamily="var(--font-display)" fontSize="9" letterSpacing="1.4" fill={dim(0.5)}>
         <text x="30" y="278">
           MYSQL · LEDGER
         </text>
@@ -376,7 +376,7 @@ function MarketGrid({ still }: { still: boolean }) {
             fontSize="8"
             letterSpacing="1.6"
             fill={ACCENT}
-            fontFamily="var(--font-mono)"
+            fontFamily="var(--font-display)"
           >
             {col.title}
           </text>
@@ -401,14 +401,14 @@ function MarketGrid({ still }: { still: boolean }) {
               <rect x={col.x + 8} y={84 + i * 48} width="24" height="24" fill={ACCENT} fillOpacity="0.25" />
               <rect x={col.x + 40} y={88 + i * 48} width="56" height="3" fill={dim(0.26)} />
               <rect x={col.x + 40} y={97 + i * 48} width="36" height="3" fill={dim(0.16)} />
-              <circle cx={col.x + 110} cy={96 + i * 48} r="2.5" fill="#6aab8d" />
+              <circle cx={col.x + 110} cy={96 + i * 48} r="2.5" fill="#3ef29a" />
             </motion.g>
           ))}
         </g>
       ))}
 
-      <g fontFamily="var(--font-mono)" fontSize="9" letterSpacing="1.4">
-        <text x="30" y="278" fill="#6aab8d">
+      <g fontFamily="var(--font-display)" fontSize="9" letterSpacing="1.4">
+        <text x="30" y="278" fill="#3ef29a">
           AUTH · SESSION OK
         </text>
         <text x="450" y="278" textAnchor="end" fill={dim(0.5)}>
@@ -472,7 +472,7 @@ function AgentLoop({ still }: { still: boolean }) {
         const p = pos(n.a);
         return (
           <g key={n.label}>
-            <circle cx={p.x} cy={p.y} r="21" fill="#0c0b0a" stroke={ACCENT} strokeOpacity="0.5" />
+            <circle cx={p.x} cy={p.y} r="21" fill="#05030f" stroke={ACCENT} strokeOpacity="0.5" />
             <motion.circle
               cx={p.x}
               cy={p.y}
@@ -489,7 +489,7 @@ function AgentLoop({ still }: { still: boolean }) {
               fontSize="8"
               letterSpacing="0.8"
               fill={dim(0.85)}
-              fontFamily="var(--font-mono)"
+              fontFamily="var(--font-display)"
             >
               {n.label}
             </text>
@@ -505,7 +505,7 @@ function AgentLoop({ still }: { still: boolean }) {
         fontSize="8"
         letterSpacing="1.2"
         fill={dim(0.45)}
-        fontFamily="var(--font-mono)"
+        fontFamily="var(--font-display)"
       >
         CONTEXT
       </text>
@@ -516,12 +516,12 @@ function AgentLoop({ still }: { still: boolean }) {
         fontSize="8"
         letterSpacing="1.2"
         fill={ACCENT}
-        fontFamily="var(--font-mono)"
+        fontFamily="var(--font-display)"
       >
         PERSISTENT
       </text>
 
-      <g fontFamily="var(--font-mono)" fontSize="8" letterSpacing="1.2" fill={dim(0.5)}>
+      <g fontFamily="var(--font-display)" fontSize="8" letterSpacing="1.2" fill={dim(0.5)}>
         {["SEARCH", "FILES", "SHELL", "VOICE"].map((t, i) => (
           <g key={t}>
             <line x1={30 + i * 106} y1="266" x2={30 + i * 106 + 94} y2="266" stroke={dim(0.12)} />
@@ -551,7 +551,7 @@ export function ProjectVisual({ id, title }: { id: string; title: string }) {
 
   return (
     <figure
-      className="relative aspect-[16/10] w-full overflow-hidden border border-rule bg-paper-2"
+      className="relative aspect-[16/10] w-full overflow-hidden border border-violet/30 bg-deep"
       role="img"
       aria-label={`Architecture diagram for ${title}`}
     >

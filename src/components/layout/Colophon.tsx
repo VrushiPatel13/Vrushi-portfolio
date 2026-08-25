@@ -1,6 +1,6 @@
 "use client";
 
-import { profile, socials, sections } from "@/lib/data";
+import { profile, socials, levels } from "@/lib/data";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { scrollToSection } from "@/lib/scroll";
 
@@ -8,16 +8,19 @@ export function Colophon() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-rule">
-      {/* Wordmark rule */}
-      <div aria-hidden className="edge-fade-x overflow-hidden border-b border-rule py-6">
-        <div className="flex w-max animate-[marquee_70s_linear_infinite] gap-12 will-change-transform">
+    <footer className="relative border-t border-violet/30">
+      {/* Attract-mode wordmark */}
+      <div
+        aria-hidden
+        className="edge-fade-x overflow-hidden border-b border-violet/20 py-6"
+      >
+        <div className="flex w-max animate-[marquee_44s_linear_infinite] gap-10 will-change-transform">
           {Array.from({ length: 4 }).map((_, i) => (
             <span
               key={i}
-              className="font-display text-[clamp(2.5rem,7vw,5rem)] font-black leading-none tracking-[-0.03em] text-transparent [-webkit-text-stroke:1px_var(--color-rule-2)]"
+              className="font-display text-[clamp(2.2rem,6.5vw,4.5rem)] font-black uppercase leading-none tracking-tight text-transparent [-webkit-text-stroke:1px_var(--color-violet)]"
             >
-              {profile.first} {profile.last} —
+              {profile.first} {profile.last} ★
             </span>
           ))}
         </div>
@@ -26,27 +29,27 @@ export function Colophon() {
       <div className="shell py-12">
         <div className="grid gap-10 md:grid-cols-[1.3fr_1fr_1fr]">
           <div>
-            <p className="label label-accent">Colophon</p>
-            <p className="mt-4 max-w-sm font-serif text-[0.95rem] leading-relaxed text-ink-dim">
-              Set in Fraunces, Newsreader and IBM Plex Mono. Built with Next.js,
-              Three.js and Framer Motion. Written and maintained in {profile.location}.
+            <p className="pixel pixel-cyan">Game Over</p>
+            <p className="mt-4 max-w-sm text-[0.925rem] leading-relaxed text-ink-dim">
+              Set in Orbitron, Space Grotesk and Press Start 2P. Built with Next.js,
+              Three.js and Framer Motion. Written in {profile.location}.
             </p>
-            <p className="label mt-5">{profile.timezone}</p>
+            <p className="pixel mt-5">{profile.timezone}</p>
           </div>
 
           <nav aria-label="Footer">
-            <p className="label">Contents</p>
+            <p className="pixel pixel-magenta">Levels</p>
             <ul className="mt-4 space-y-2">
-              {sections.map((s) => (
-                <li key={s.id} className="flex items-baseline gap-3">
-                  <span className="font-mono text-[10px] tabular-nums text-ink-mute">
-                    {s.num}
+              {levels.map((l) => (
+                <li key={l.id} className="flex items-baseline gap-3">
+                  <span className="font-display text-[10px] font-bold tabular-nums text-ink-faint">
+                    {l.num}
                   </span>
                   <button
-                    onClick={() => scrollToSection(s.id)}
-                    className="rule-link font-serif text-sm text-ink-dim"
+                    onClick={() => scrollToSection(l.id)}
+                    className="text-sm text-ink-dim transition-colors duration-300 hover:text-cyan"
                   >
-                    {s.label}
+                    {l.tag}
                   </button>
                 </li>
               ))}
@@ -54,12 +57,12 @@ export function Colophon() {
           </nav>
 
           <div>
-            <p className="label">Elsewhere</p>
+            <p className="pixel pixel-lime">Contact</p>
             <ul className="mt-4 space-y-2">
               <li>
                 <a
                   href={`mailto:${profile.email}`}
-                  className="rule-link font-serif text-sm text-ink-dim"
+                  className="text-sm text-ink-dim transition-colors duration-300 hover:text-cyan"
                 >
                   {profile.email}
                 </a>
@@ -68,13 +71,13 @@ export function Colophon() {
                 <li key={s.label} className="flex items-center gap-2.5">
                   <SocialIcon
                     name={s.icon}
-                    className="h-3.5 w-3.5 shrink-0 text-ink-mute"
+                    className="h-3.5 w-3.5 shrink-0 text-ink-faint"
                   />
                   <a
                     href={s.href}
                     target={s.href.startsWith("http") ? "_blank" : undefined}
                     rel={s.href.startsWith("http") ? "noreferrer noopener" : undefined}
-                    className="rule-link font-serif text-sm text-ink-dim"
+                    className="text-sm text-ink-dim transition-colors duration-300 hover:text-cyan"
                   >
                     {s.handle}
                   </a>
@@ -84,7 +87,7 @@ export function Colophon() {
                 <a
                   href={profile.resume}
                   download
-                  className="rule-link font-serif text-sm text-ink-dim"
+                  className="text-sm text-ink-dim transition-colors duration-300 hover:text-cyan"
                 >
                   Résumé (PDF)
                 </a>
@@ -93,15 +96,20 @@ export function Colophon() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-rule pt-5 sm:flex-row sm:items-center">
-          <p className="label">
+        <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-violet/20 pt-5 sm:flex-row sm:items-center">
+          <p className="pixel">
             © {year} {profile.name}
           </p>
-          <p className="label flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-live" />
+          <p className="pixel pixel-lime flex items-center gap-2">
+            <span className="h-2 w-2 bg-live" />
             {profile.availability}
           </p>
-          <p className="label">{profile.edition}</p>
+          <button
+            onClick={() => scrollToSection("hero")}
+            className="pixel pixel-cyan transition-opacity duration-300 hover:opacity-70"
+          >
+            ▲ Restart
+          </button>
         </div>
       </div>
     </footer>

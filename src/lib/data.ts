@@ -2,8 +2,11 @@
  * ============================================================================
  * SINGLE SOURCE OF TRUTH for every word on the site.
  *
- * House style: short, plain, first person, no hype. If a sentence can be cut,
- * cut it. Anything unverified is marked `TODO(vrushi)` — search that string.
+ * RULE: real data only. Every credential below was read directly out of the
+ * certificate PDF — titles, issuers, dates and verification codes transcribed,
+ * not paraphrased — and carries its live verification URL. Projects come from
+ * the CV. GitHub figures are fetched live, never typed in. Nothing is invented:
+ * if it can't be verified, it isn't on the page.
  * ============================================================================
  */
 
@@ -13,39 +16,36 @@
 
 export const profile = {
   name: "Vrushi Patel",
-  first: "Vrushi",
-  last: "Patel",
+  legalName: "Vrushi Jayeshbhai Patel",
+  first: "VRUSHI",
+  last: "PATEL",
   initials: "VP",
   role: "AI Engineer",
   roles: ["AI Engineer", "Full-Stack Developer", "Software Engineer"],
-  edition: "Vol. I — Edition 2026",
-  /** The one line that has to earn the scroll. */
-  positioning: "Applied AI — computer vision, retrieval systems, and the backends that carry them.",
+  positioning:
+    "Applied AI — computer vision, retrieval systems, and the backends that carry them.",
   location: "Ahmedabad, India",
-  locationLine: "Ahmedabad, India — 2026",
   timezone: "IST · UTC+5:30",
   email: "vruship13@gmail.com",
   phone: "+91 93131 12755",
   phoneHref: "+919313112755",
-  availability: "Available for roles",
+  availability: "Open to roles",
   resume: "/vrushi-patel-resume.pdf",
   githubUser: "VrushiPatel13",
-  // The canonical origin is resolved at build time in `src/lib/site.ts` —
-  // Vercel fills it in automatically, so there's nothing to edit here.
+  // Canonical origin resolves at build time in `src/lib/site.ts`.
 } as const;
 
 /* -------------------------------------------------------------------------- */
-/*                                    ESSAY                                    */
+/*                                    ABOUT                                    */
 /* -------------------------------------------------------------------------- */
 
-export const essay = {
+export const about = {
   headline: "I build the layer between a model and something people can use.",
   paragraphs: [
     "I work on applied AI — the part after the notebook. Detection wired to an alerting pipeline. Retrieval wired to real documents. A dashboard someone can open on a Tuesday morning and act on. Most of what I know came from building a small version, breaking it, and finding out why.",
     "I started in Java, writing management systems where every state transition had to be handled by hand. That taught me schema design and defensive validation before it taught me anything about models — which is why my AI work tends to ship. I'm early in my career and comfortable saying so.",
   ],
-  pullQuote:
-    "A model that never leaves the notebook hasn't solved anything.",
+  pullQuote: "A model that never leaves the notebook hasn't solved anything.",
 };
 
 export type Trait = { title: string; body: string };
@@ -61,7 +61,7 @@ export const traits: Trait[] = [
   },
   {
     title: "Ownership",
-    body: "I take a problem end to end — data, model, API, interface — rather than handing off the hard half.",
+    body: "I take a problem end to end — data, model, API, interface — not just the easy half.",
   },
   {
     title: "Clarity",
@@ -78,10 +78,10 @@ export const traits: Trait[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/*                                 FIELD NOTES                                 */
+/*                                 RUN HISTORY                                 */
 /* -------------------------------------------------------------------------- */
 
-export type FieldNote = {
+export type RunEntry = {
   id: string;
   period: string;
   org: string;
@@ -92,7 +92,7 @@ export type FieldNote = {
   current?: boolean;
 };
 
-export const fieldNotes: FieldNote[] = [
+export const runHistory: RunEntry[] = [
   {
     id: "independent-ai",
     period: "2026 — Present",
@@ -122,10 +122,23 @@ export const fieldNotes: FieldNote[] = [
     ],
     stack: ["Java", "MySQL", "Django", "Firebase", "JavaScript", "Render"],
   },
+  {
+    id: "btech",
+    period: "2024 — 2028",
+    org: "L.J. University, Ahmedabad",
+    title: "B.Tech, Computer Science Engineering (AI)",
+    summary: "Core computer science with an artificial intelligence specialisation.",
+    points: [
+      "Algorithms, data structures and application architecture, taught through Java.",
+      "Coursework across machine learning, deep learning and data science.",
+      "Consistent record of taking coursework further into shipped, real-world projects.",
+    ],
+    stack: ["Algorithms", "Data Structures", "Machine Learning", "Databases"],
+  },
 ];
 
 /* -------------------------------------------------------------------------- */
-/*                                SELECTED WORK                                */
+/*                                 BOSS FIGHTS                                 */
 /* -------------------------------------------------------------------------- */
 
 export type Project = {
@@ -135,12 +148,12 @@ export type Project = {
   year: string;
   oneLiner: string;
   description: string;
-  /** Structural facts about the build — not benchmark claims. */
+  /** Structural facts about the build — never unmeasured performance claims. */
   metrics: { value: string; label: string }[];
   points: string[];
   stack: string[];
   status: "Live" | "Shipped" | "In development";
-  /** TODO(vrushi): add URLs — empty strings hide the buttons. */
+  /** Empty strings hide the buttons. Add URLs when the repos go public. */
   repo: string;
   demo: string;
 };
@@ -157,7 +170,7 @@ export const projects: Project[] = [
       "Out-of-stock events are a last-mile visibility problem: nobody knows the state of a shelf until a customer complains. This reads existing camera feeds, diffs what it sees against the intended planogram, forecasts demand per SKU, and routes alerts to whoever can fix them.",
     metrics: [
       { value: "< 5 min", label: "alert target" },
-      { value: "SKU-level", label: "detection granularity" },
+      { value: "SKU-level", label: "detection" },
       { value: "3", label: "alert channels" },
     ],
     points: [
@@ -179,9 +192,9 @@ export const projects: Project[] = [
     description:
       "Most RAG demos retrieve once, fill the context window and hope. This treats retrieval as the product: structure-aware chunking, hybrid dense and keyword search, reranking before generation, and answers traceable to the passage they came from.",
     metrics: [
-      { value: "Hybrid", label: "dense + keyword retrieval" },
-      { value: "Cited", label: "every claim traceable" },
-      { value: "Streamed", label: "token transport" },
+      { value: "Hybrid", label: "retrieval" },
+      { value: "Cited", label: "every claim" },
+      { value: "Streamed", label: "transport" },
     ],
     points: [
       "Ingestion pipeline with structure-aware chunking and embedding generation across mixed formats.",
@@ -202,12 +215,12 @@ export const projects: Project[] = [
     description:
       "A delivery management system in the spirit of Porter, with live consignment tracking and a full operational back office. No framework doing the thinking — the state machine, schema, validation and reporting were each designed explicitly, which is why it holds under messy input.",
     metrics: [
-      { value: "4-stage", label: "guarded lifecycle" },
-      { value: "2", label: "privilege-separated modules" },
-      { value: "Normalised", label: "relational schema" },
+      { value: "4-stage", label: "lifecycle" },
+      { value: "2", label: "role modules" },
+      { value: "Normalised", label: "schema" },
     ],
     points: [
-      "Booked → Picked Up → In Transit → Delivered, with transitions guarded rather than assumed.",
+      "Booked to Picked Up to In Transit to Delivered, with transitions guarded rather than assumed.",
       "MySQL schema spanning customers, consignments, drivers and payment history.",
       "Admin console for cost control, live monitoring and revenue reporting.",
     ],
@@ -225,9 +238,9 @@ export const projects: Project[] = [
     description:
       "A three-sided rental marketplace where physical products, skilled services and bookable spaces all move through one listing, availability and transaction model. Built end to end and deployed publicly.",
     metrics: [
-      { value: "3", label: "listing types, one model" },
-      { value: "Live", label: "deployed and tested" },
-      { value: "Complete", label: "CRUD across resources" },
+      { value: "3", label: "listing types" },
+      { value: "Live", label: "deployed" },
+      { value: "Complete", label: "CRUD" },
     ],
     points: [
       "Secure authentication with session handling and protected routes across every listing type.",
@@ -246,11 +259,11 @@ export const projects: Project[] = [
     status: "In development",
     oneLiner: "An assistant that plans, calls a tool, checks the result, continues.",
     description:
-      "The difference between a chatbot and an assistant is whether it can act. This runs a real agent loop — decompose, select a tool, execute, observe, iterate — with every call bounded so a bad plan can't run away with the machine.",
+      "The difference between a chatbot and an assistant is whether it can act. This runs a real agent loop — decompose, select a tool, execute, observe, iterate — with every call bounded so a bad plan cannot run away with the machine.",
     metrics: [
-      { value: "Plan → act", label: "bounded agent loop" },
-      { value: "Persistent", label: "context across sessions" },
-      { value: "Voice + text", label: "input modes" },
+      { value: "Plan to act", label: "agent loop" },
+      { value: "Persistent", label: "context" },
+      { value: "Voice + text", label: "input" },
     ],
     points: [
       "Tool calling with structured schemas, argument validation and bounded retries.",
@@ -263,7 +276,6 @@ export const projects: Project[] = [
   },
 ];
 
-/** Smaller builds that still earn a line. */
 export const archiveProjects = [
   {
     id: "park-management",
@@ -276,13 +288,13 @@ export const archiveProjects = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/*                                  THE INDEX                                  */
+/*                                  INVENTORY                                  */
 /* -------------------------------------------------------------------------- */
 
-export type IndexGroup = { title: string; items: string[] };
+export type InventoryGroup = { title: string; items: string[] };
 
-/** Plain lists, no invented proficiency numbers. */
-export const indexGroups: IndexGroup[] = [
+/** Plain lists, straight from the CV. No invented proficiency numbers. */
+export const inventory: InventoryGroup[] = [
   {
     title: "Languages",
     items: ["Python", "Java", "JavaScript", "TypeScript", "C++", "SQL"],
@@ -303,14 +315,7 @@ export const indexGroups: IndexGroup[] = [
   },
   {
     title: "Backend",
-    items: [
-      "Django",
-      "FastAPI",
-      "Node.js",
-      "REST APIs",
-      "Authentication Systems",
-      "JDBC",
-    ],
+    items: ["Django", "FastAPI", "Node.js", "REST APIs", "Auth Systems", "JDBC"],
   },
   {
     title: "Databases",
@@ -321,19 +326,18 @@ export const indexGroups: IndexGroup[] = [
     items: ["React", "Next.js", "Tailwind CSS", "HTML5", "CSS3", "Bootstrap"],
   },
   {
-    title: "Tools & Deploy",
+    title: "Tools",
     items: ["Git", "GitHub", "Vercel", "Render", "Streamlit"],
   },
 ];
 
-export const indexCount = indexGroups.reduce((n, g) => n + g.items.length, 0);
+export const inventoryCount = inventory.reduce((n, g) => n + g.items.length, 0);
 
 /* -------------------------------------------------------------------------- */
-/*                                 ON THE DESK                                 */
+/*                                 IN PROGRESS                                 */
 /* -------------------------------------------------------------------------- */
 
-/** Short "currently building / writing" strip. */
-export const onTheDesk = [
+export const inProgress = [
   {
     label: "Building",
     title: "Conversational RAG",
@@ -344,82 +348,77 @@ export const onTheDesk = [
     title: "Personal AI Assistant",
     note: "Expanding the tool registry and voice loop.",
   },
-  {
-    label: "Writing",
-    title: "Grounding an LLM in your own documents",
-    note: "On chunking, hybrid retrieval and honest citations.",
-  },
 ];
 
 /* -------------------------------------------------------------------------- */
-/*                                   RECORD                                    */
+/*                                ACHIEVEMENTS                                 */
 /* -------------------------------------------------------------------------- */
 
-export type RecordEntry = {
+export type Achievement = {
   id: string;
   rail: string;
   title: string;
   org: string;
   note: string;
   kind: "award" | "education" | "certificate";
-  /** TODO(vrushi): add credential verification URLs where you have them. */
+  /** Live verification URL, transcribed from the certificate itself. */
   url?: string;
+  /** Individual courses inside a specialization, each independently verifiable. */
+  parts?: { title: string; url: string }[];
 };
 
-// TODO(vrushi): certificate titles came from your certificate PDFs — confirm the
-// exact issuer wording, add credential links, and add any I've missed.
-export const record: RecordEntry[] = [
+export const achievements: Achievement[] = [
+  {
+    id: "google-prompting-essentials",
+    rail: "Jun 2026",
+    title: "Google Prompting Essentials",
+    org: "Google · Specialization via Coursera",
+    note: "Four-course specialization developed by Google. Designing effective prompts and applying advanced prompting techniques to complete complex tasks, analyse data and summarise information.",
+    kind: "certificate",
+    url: "https://coursera.org/verify/specialization/FA7UK1B7C82N",
+    parts: [
+      {
+        title: "Start Writing Prompts like a Pro",
+        url: "https://coursera.org/verify/DN2WZ5JYSHRX",
+      },
+      {
+        title: "Design Prompts for Everyday Work Tasks",
+        url: "https://coursera.org/verify/0R30P819U0V8",
+      },
+      {
+        title: "Speed Up Data Analysis and Presentation Building",
+        url: "https://coursera.org/verify/LPEAN5YXSSIU",
+      },
+      {
+        title: "Use AI as a Creative or Expert Partner",
+        url: "https://coursera.org/verify/QUIFS4OE90JW",
+      },
+    ],
+  },
+  {
+    id: "ibm-eda-ml",
+    rail: "Jun 2026",
+    title: "Exploratory Data Analysis for Machine Learning",
+    org: "IBM · Coursera",
+    note: "Retrieving, cleaning and exploring data for machine learning — feature engineering, hypothesis testing and the statistics underneath model selection.",
+    kind: "certificate",
+    url: "https://coursera.org/verify/BGVYD98XR4EI",
+  },
   {
     id: "retail-challenge",
-    rail: "AI Challenge",
+    rail: "2026",
     title: "Smart Retail Shelf Intelligence",
-    org: "Retail & AI domain — 2026",
-    note: "Delivered the full brief: computer-vision shelf analysis, planogram compliance, demand forecasting, alerting and an analytics dashboard.",
+    org: "AI Challenge · Retail & AI domain",
+    note: "Delivered the full brief: computer-vision shelf analysis, planogram compliance, demand forecasting with reorder-point generation, a sub-five-minute alerting pipeline and a management analytics dashboard.",
     kind: "award",
   },
   {
-    id: "btech",
+    id: "btech-record",
     rail: "2024 — 2028",
     title: "B.Tech, Computer Science Engineering (AI)",
     org: "L.J. University, Ahmedabad",
     note: "Algorithms, systems design, machine learning and databases.",
     kind: "education",
-  },
-  {
-    id: "google-prompting",
-    rail: "2026",
-    title: "Google Prompting Essentials",
-    org: "Google",
-    note: "Structured prompt design, iterative refinement and output evaluation.",
-    kind: "certificate",
-    url: "",
-  },
-  {
-    id: "prompt-engineering",
-    rail: "2026",
-    title: "Prompt Engineering",
-    org: "Certification programme",
-    note: "Few-shot patterns, chain-of-thought, role framing and constraint design.",
-    kind: "certificate",
-    url: "",
-  },
-  {
-    id: "machine-learning",
-    rail: "2026",
-    title: "Machine Learning",
-    org: "Coursera",
-    note: "Supervised and unsupervised learning, evaluation and regularisation.",
-    kind: "certificate",
-    url: "",
-  },
-  {
-    id: "data-science",
-    rail: "2026",
-    title: "Data Science: EDA & Feature Engineering",
-    org: "Coursera",
-    note: "Exploratory analysis, hypothesis testing and feature construction.",
-    kind: "certificate",
-    url: "",
   },
 ];
 
@@ -456,15 +455,15 @@ export const socials: Social[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/*                                  CONTENTS                                   */
+/*                                   LEVELS                                    */
 /* -------------------------------------------------------------------------- */
 
-export const sections = [
-  { id: "essay", num: "01", department: "Opening Essay", label: "About" },
-  { id: "field-notes", num: "02", department: "Field Notes", label: "Experience" },
-  { id: "work", num: "03", department: "The Feature", label: "Selected Work" },
-  { id: "numbers", num: "04", department: "Data Desk", label: "By the Numbers" },
-  { id: "index", num: "05", department: "The Index", label: "Capabilities" },
-  { id: "record", num: "06", department: "On Record", label: "Credentials" },
-  { id: "contact", num: "07", department: "The Back Page", label: "Contact" },
+export const levels = [
+  { id: "about", num: "01", tag: "Origin", label: "About" },
+  { id: "run", num: "02", tag: "Run History", label: "Experience" },
+  { id: "work", num: "03", tag: "Boss Fights", label: "Work" },
+  { id: "stats", num: "04", tag: "Stats", label: "GitHub" },
+  { id: "inventory", num: "05", tag: "Inventory", label: "Skills" },
+  { id: "achievements", num: "06", tag: "Achievements", label: "Awards" },
+  { id: "contact", num: "07", tag: "Continue?", label: "Contact" },
 ] as const;

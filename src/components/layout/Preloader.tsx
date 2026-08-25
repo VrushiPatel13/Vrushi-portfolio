@@ -6,7 +6,17 @@ import { useBoot } from "@/components/providers/BootProvider";
 import { lockScroll, unlockScroll } from "@/lib/scroll";
 import { profile } from "@/lib/data";
 
-const DURATION = 1700;
+const DURATION = 2000;
+
+const BOOT_LOG = [
+  "MOUNTING RENDER PIPELINE",
+  "LOADING NEURAL WEIGHTS",
+  "COMPILING SHADERS",
+  "BUILDING NEON CORRIDOR",
+  "READY PLAYER ONE",
+];
+
+const BLOCKS = 20;
 
 export function Preloader() {
   const { booted, setBooted } = useBoot();
@@ -39,7 +49,7 @@ export function Preloader() {
       exitTimer = window.setTimeout(() => {
         unlockScroll();
         setBooted(true);
-      }, 850);
+      }, 800);
     };
 
     const tick = (now: number) => {
@@ -78,64 +88,104 @@ export function Preloader() {
     };
   }, [setBooted]);
 
+  const logIndex = Math.min(
+    BOOT_LOG.length - 1,
+    Math.floor((progress / 100) * BOOT_LOG.length),
+  );
+  const litBlocks = Math.round((progress / 100) * BLOCKS);
+
   return (
     <AnimatePresence>
       {!booted && (
         <motion.div
           key="preloader"
-          className="fixed inset-0 z-[10000] flex flex-col justify-between bg-paper px-6 py-6 sm:px-10 sm:py-10"
+          className="scanlines vignette fixed inset-0 z-[10000] flex flex-col justify-between overflow-hidden bg-void px-5 py-6 sm:px-10 sm:py-10"
           initial={{ opacity: 1 }}
-          animate={exiting ? { y: "-100%" } : { y: 0 }}
+          animate={exiting ? { opacity: 0, scale: 1.04 } : { opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.85, ease: [0.83, 0, 0.17, 1] }}
+          transition={{ duration: 0.8, ease: [0.83, 0, 0.17, 1] }}
           role="status"
           aria-live="polite"
           aria-label={`Loading, ${progress} percent`}
         >
-          {/* Head */}
-          <div className="flex items-start justify-between border-t border-rule pt-4">
-            <span className="label label-accent">{profile.edition}</span>
-            <span className="label hidden sm:block">{profile.locationLine}</span>
+          {/* Cabinet grid */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-20"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, var(--color-grid) 1px, transparent 1px), linear-gradient(to bottom, var(--color-grid) 1px, transparent 1px)",
+              backgroundSize: "48px 48px",
+            }}
+          />
+
+          {/* Top rail */}
+          <div className="relative flex items-start justify-between">
+            <span className="pixel pixel-cyan">Player 1</span>
+            <span className="pixel hidden sm:block">{profile.location}</span>
           </div>
 
-          {/* Name */}
-          <div className="flex flex-1 items-center">
-            <div>
-              <motion.p
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="font-display text-[clamp(2.6rem,10vw,7rem)] font-black leading-[0.88] tracking-[-0.035em] text-ink-hi"
-              >
-                {profile.first}
-                <br />
-                {profile.last}
-              </motion.p>
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.25 }}
-                className="label mt-5"
-              >
-                {profile.role}
-              </motion.p>
-            </div>
+          {/* Title */}
+          <div className="relative flex flex-1 flex-col items-center justify-center text-center">
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="pixel pixel-magenta mb-6 animate-blink"
+            >
+              Insert Coin
+            </motion.p>
+
+            {/* Deliberately not an <h1> — the hero owns the page's only one. */}
+            <motion.p
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="animate-flicker font-display text-[clamp(2rem,9vw,6rem)] font-black leading-[0.92] tracking-tight"
+            >
+              <span className="neon-cyan">{profile.first}</span>
+              <br />
+              <span className="neon-magenta">{profile.last}</span>
+            </motion.p>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="hud mt-6"
+            >
+              {profile.role}
+            </motion.p>
           </div>
 
-          {/* Press rule */}
-          <div>
+          {/* Loading blocks */}
+          <div className="relative">
             <div className="mb-3 flex items-baseline justify-between">
-              <span className="label">Setting type</span>
-              <span className="font-mono text-sm tabular-nums text-ink-hi">
+              <span className="pixel pixel-lime">{BOOT_LOG[logIndex]}</span>
+              <span className="font-display text-2xl font-black tabular-nums text-ink-hi sm:text-3xl">
                 {String(progress).padStart(3, "0")}
-                <span className="text-ink-mute">/100</span>
+                <span className="ml-1 text-sm text-cyan">%</span>
               </span>
             </div>
-            <div className="relative h-px w-full bg-rule">
-              <motion.span
-                className="absolute inset-y-0 left-0 bg-accent"
-                style={{ width: `${progress}%` }}
-              />
+
+            <div className="flex gap-1">
+              {Array.from({ length: BLOCKS }).map((_, i) => (
+                <span
+                  key={i}
+                  className="h-3 flex-1 transition-colors duration-150"
+                  style={{
+                    background:
+                      i < litBlocks
+                        ? i > BLOCKS - 5
+                          ? "var(--color-magenta)"
+                          : "var(--color-cyan)"
+                        : "color-mix(in oklab, var(--color-violet) 22%, transparent)",
+                    boxShadow:
+                      i < litBlocks
+                        ? "0 0 12px -2px var(--color-cyan)"
+                        : undefined,
+                  }}
+                />
+              ))}
             </div>
           </div>
         </motion.div>

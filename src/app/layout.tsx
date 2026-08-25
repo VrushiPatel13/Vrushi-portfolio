@@ -1,34 +1,34 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Newsreader, IBM_Plex_Mono } from "next/font/google";
+import { Orbitron, Press_Start_2P, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 import { BootProvider } from "@/components/providers/BootProvider";
 import { Preloader } from "@/components/layout/Preloader";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Cursor } from "@/components/layout/Cursor";
-import { Contents } from "@/components/layout/Contents";
+import { Hud } from "@/components/layout/Hud";
 import { Colophon } from "@/components/layout/Colophon";
+import { SceneBackdrop } from "@/components/three/SceneBackdrop";
 import { profile, socials } from "@/lib/data";
 import { siteUrl } from "@/lib/site";
 
-const fraunces = Fraunces({
+const orbitron = Orbitron({
   subsets: ["latin"],
-  variable: "--font-fraunces",
+  variable: "--font-orbitron",
   display: "swap",
 });
 
-const newsreader = Newsreader({
+const pressStart = Press_Start_2P({
   subsets: ["latin"],
-  variable: "--font-newsreader",
+  variable: "--font-press-start",
   display: "swap",
-  style: ["normal", "italic"],
+  weight: "400",
 });
 
-const plexMono = IBM_Plex_Mono({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-plex-mono",
+  variable: "--font-space-grotesk",
   display: "swap",
-  weight: ["400", "500", "600"],
 });
 
 const title = `${profile.name} — AI Engineer`;
@@ -87,7 +87,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0c0b0a",
+  themeColor: "#05030f",
   colorScheme: "dark",
 };
 
@@ -95,6 +95,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: profile.name,
+  alternateName: profile.legalName,
   jobTitle: "AI Engineer",
   description,
   url: siteUrl,
@@ -126,10 +127,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${newsreader.variable} ${plexMono.variable}`}
+      className={`${orbitron.variable} ${pressStart.variable} ${spaceGrotesk.variable}`}
       suppressHydrationWarning
     >
-      <body className="grain relative bg-paper text-ink antialiased">
+      <body className="bg-void text-ink antialiased">
         <script
           type="application/ld+json"
           // Static, author-controlled payload — no user input reaches this string.
@@ -138,7 +139,7 @@ export default function RootLayout({
 
         <a
           href="#main"
-          className="sr-only z-[9999] focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:bg-accent focus:px-5 focus:py-3 focus:font-mono focus:text-[11px] focus:uppercase focus:tracking-[0.2em] focus:text-paper"
+          className="sr-only z-[9999] focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:bg-cyan focus:px-5 focus:py-3 focus:font-display focus:text-xs focus:font-bold focus:uppercase focus:tracking-widest focus:text-void"
         >
           Skip to content
         </a>
@@ -146,8 +147,9 @@ export default function RootLayout({
         <BootProvider>
           <Preloader />
           <SmoothScroll />
+          <SceneBackdrop />
           <Cursor />
-          <Contents />
+          <Hud />
 
           <main id="main" className="relative z-0">
             {children}

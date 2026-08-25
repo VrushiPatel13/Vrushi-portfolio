@@ -1,44 +1,53 @@
 @import "tailwindcss";
 
 /* ============================================================
-   DESIGN TOKENS — printed matter
-   Warm near-black stock, cream ink, one marigold spot colour.
-   Hairline rules do the structural work; nothing glows.
+   DESIGN TOKENS — arcade cabinet
+   Deep-space indigo, neon spot colours, CRT artefacts.
    ============================================================ */
 @theme {
-  /* Stock */
-  --color-paper: #0c0b0a;
-  --color-paper-2: #141210;
-  --color-paper-3: #1c1916;
+  /* Cabinet */
+  --color-void: #05030f;
+  --color-deep: #0a0620;
+  --color-panel: #100a26;
+  --color-panel-2: #171034;
+  --color-grid: #2a1f5c;
 
   /* Ink */
-  --color-ink: #e9e2d7;
-  --color-ink-hi: #fbf7f0;
-  --color-ink-dim: #bdb3a5;
-  --color-ink-mute: #8d8578;
+  --color-ink: #eaeaff;
+  --color-ink-hi: #ffffff;
+  --color-ink-dim: #9fa2cf;
+  --color-ink-faint: #6a6d9c;
 
-  /* Rules */
-  --color-rule: #2a2521;
-  --color-rule-2: #3a332d;
+  /* Neon spot colours */
+  --color-cyan: #22e8ff;
+  --color-magenta: #ff3d9a;
+  --color-lime: #a8ff3e;
+  --color-gold: #ffc93c;
+  --color-violet: #a06bff;
 
-  /* Spot colour — used sparingly, never as a gradient */
-  --color-accent: #e9a63c;
-  --color-accent-deep: #c9832a;
-  --color-live: #6aab8d;
-  --color-flag: #d2694a;
+  /* Semantic */
+  --color-live: #3ef29a;
+  --color-warn: #ffc93c;
+  --color-danger: #ff4d5e;
 
-  /* Typography */
-  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
-  --font-serif: var(--font-newsreader), Georgia, "Times New Roman", serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+  /* Type */
+  --font-display: var(--font-orbitron), "Arial Black", sans-serif;
+  --font-pixel: var(--font-press-start), "Courier New", monospace;
+  --font-body: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", monospace;
 
   /* Motion */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-quint: cubic-bezier(0.83, 0, 0.17, 1);
 
   /* Animations */
-  --animate-marquee: marquee 60s linear infinite;
-  --animate-blink: blink 1.2s step-end infinite;
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-marquee-rev: marquee-rev 38s linear infinite;
+  --animate-blink: blink 1.05s step-end infinite;
+  --animate-flicker: flicker 4.5s linear infinite;
+  --animate-scan: scan 7s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.6s var(--ease-out-expo) infinite;
 
   @keyframes marquee {
     from {
@@ -48,13 +57,68 @@
       transform: translate3d(-50%, 0, 0);
     }
   }
+  @keyframes marquee-rev {
+    from {
+      transform: translate3d(-50%, 0, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
   @keyframes blink {
     0%,
     100% {
       opacity: 1;
     }
     50% {
-      opacity: 0.15;
+      opacity: 0;
+    }
+  }
+  @keyframes flicker {
+    0%,
+    92%,
+    100% {
+      opacity: 1;
+    }
+    93% {
+      opacity: 0.72;
+    }
+    94% {
+      opacity: 1;
+    }
+    96% {
+      opacity: 0.85;
+    }
+    97% {
+      opacity: 1;
+    }
+  }
+  @keyframes scan {
+    from {
+      transform: translate3d(0, -110%, 0);
+    }
+    to {
+      transform: translate3d(0, 110%, 0);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -10px, 0);
+    }
+  }
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.85);
+      opacity: 0.8;
+    }
+    75%,
+    100% {
+      transform: scale(1.7);
+      opacity: 0;
     }
   }
 }
@@ -64,7 +128,7 @@
    ============================================================ */
 @layer base {
   * {
-    border-color: var(--color-rule);
+    border-color: color-mix(in oklab, var(--color-violet) 22%, transparent);
   }
 
   html {
@@ -73,11 +137,10 @@
   }
 
   body {
-    background-color: var(--color-paper);
+    background-color: var(--color-void);
     color: var(--color-ink);
-    font-family: var(--font-serif);
-    font-size: 1rem;
-    line-height: 1.65;
+    font-family: var(--font-body);
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
@@ -88,9 +151,9 @@
   h3 {
     font-family: var(--font-display);
     color: var(--color-ink-hi);
-    font-weight: 700;
-    letter-spacing: -0.025em;
-    line-height: 1.04;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.02;
     text-wrap: balance;
   }
 
@@ -99,107 +162,164 @@
   }
 
   ::selection {
-    background: var(--color-accent);
-    color: var(--color-paper);
+    background: var(--color-magenta);
+    color: #fff;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--color-cyan);
     outline-offset: 3px;
   }
 
   ::-webkit-scrollbar {
-    width: 11px;
+    width: 10px;
   }
   ::-webkit-scrollbar-track {
-    background: var(--color-paper);
-    border-left: 1px solid var(--color-rule);
+    background: var(--color-void);
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--color-rule-2);
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent-deep);
+    background: linear-gradient(var(--color-magenta), var(--color-cyan));
   }
 
   html {
-    scrollbar-color: var(--color-rule-2) var(--color-paper);
+    scrollbar-color: var(--color-violet) var(--color-void);
     scrollbar-width: thin;
   }
 }
 
 /* ============================================================
-   COMPONENT PRIMITIVES
+   ARCADE PRIMITIVES
    ============================================================ */
 @layer components {
-  /* --- Mono label: the house voice for everything small ---- */
-  .label {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.22em;
+  /* --- Pixel label: the house voice for small text -------- */
+  .pixel {
+    font-family: var(--font-pixel);
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    line-height: 1.9;
     text-transform: uppercase;
-    color: var(--color-ink-mute);
-    line-height: 1.4;
+    color: var(--color-ink-faint);
   }
 
-  .label-accent {
-    color: var(--color-accent);
+  .pixel-cyan {
+    color: var(--color-cyan);
+  }
+  .pixel-magenta {
+    color: var(--color-magenta);
+  }
+  .pixel-lime {
+    color: var(--color-lime);
   }
 
-  .label-ink {
-    color: var(--color-ink-dim);
-  }
-
-  /* --- Drop cap for the opening essay -------------------- */
-  .dropcap::first-letter {
-    float: left;
+  /* --- HUD label (readable, wide-tracked) ----------------- */
+  .hud {
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 3.6em;
-    line-height: 0.82;
-    padding-right: 0.09em;
-    margin-top: 0.06em;
-    color: var(--color-accent);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
   }
 
-  /* --- Buttons: set in mono, squared off ----------------- */
+  /* --- Neon panel with corner brackets -------------------- */
+  .panel {
+    position: relative;
+    background:
+      linear-gradient(
+        160deg,
+        color-mix(in oklab, var(--color-panel) 92%, transparent),
+        color-mix(in oklab, var(--color-deep) 88%, transparent)
+      );
+    border: 1px solid color-mix(in oklab, var(--color-violet) 34%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .panel-glow {
+    box-shadow:
+      inset 0 0 30px -12px color-mix(in oklab, var(--color-violet) 55%, transparent),
+      0 0 0 1px color-mix(in oklab, var(--color-violet) 18%, transparent);
+  }
+
+  /* Corner brackets — the arcade frame */
+  .brackets::before,
+  .brackets::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: var(--color-cyan);
+    transition: border-color 0.35s ease;
+    pointer-events: none;
+  }
+  .brackets::before {
+    top: -1px;
+    left: -1px;
+    border-top: 2px solid;
+    border-left: 2px solid;
+  }
+  .brackets::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 2px solid;
+    border-right: 2px solid;
+  }
+
+  /* --- Buttons -------------------------------------------- */
   .btn {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 0.6rem;
-    font-family: var(--font-mono);
+    gap: 0.55rem;
+    font-family: var(--font-display);
     font-size: 0.6875rem;
-    font-weight: 500;
+    font-weight: 700;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    padding: 0.85rem 1.4rem;
-    border: 1px solid var(--color-rule-2);
+    padding: 0.9rem 1.5rem;
+    border: 1px solid var(--color-violet);
     color: var(--color-ink);
-    background: transparent;
+    background: color-mix(in oklab, var(--color-violet) 12%, transparent);
+    clip-path: polygon(
+      10px 0,
+      100% 0,
+      100% calc(100% - 10px),
+      calc(100% - 10px) 100%,
+      0 100%,
+      0 10px
+    );
     transition:
-      color 0.35s ease,
-      background-color 0.35s ease,
-      border-color 0.35s ease;
+      color 0.3s ease,
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.35s ease,
+      transform 0.12s ease;
     white-space: nowrap;
   }
 
   .btn:hover {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
+    color: var(--color-void);
+    background: var(--color-cyan);
+    border-color: var(--color-cyan);
+    box-shadow: 0 0 26px -4px var(--color-cyan);
   }
 
-  .btn-solid {
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-    color: var(--color-paper);
+  /* Physical press — arcade buttons travel */
+  .btn:active {
+    transform: translateY(2px);
   }
 
-  .btn-solid:hover {
-    background: var(--color-ink-hi);
-    border-color: var(--color-ink-hi);
-    color: var(--color-paper);
+  .btn-primary {
+    background: var(--color-magenta);
+    border-color: var(--color-magenta);
+    color: #fff;
+    box-shadow: 0 0 24px -6px var(--color-magenta);
+  }
+  .btn-primary:hover {
+    background: var(--color-cyan);
+    border-color: var(--color-cyan);
+    color: var(--color-void);
   }
 
   .btn-sm {
@@ -207,50 +327,86 @@
     font-size: 0.625rem;
   }
 
-  /* --- Index / stack tokens ------------------------------ */
+  /* --- Inventory token ------------------------------------ */
   .token {
     display: inline-flex;
     align-items: center;
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.06em;
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 500;
     color: var(--color-ink-dim);
-    padding: 0.3rem 0.6rem;
-    border: 1px solid var(--color-rule);
+    padding: 0.35rem 0.7rem;
+    border: 1px solid color-mix(in oklab, var(--color-violet) 30%, transparent);
+    background: color-mix(in oklab, var(--color-violet) 8%, transparent);
     transition:
-      border-color 0.3s ease,
-      color 0.3s ease;
+      border-color 0.25s ease,
+      color 0.25s ease,
+      box-shadow 0.25s ease;
   }
 
   .token:hover {
-    border-color: var(--color-accent);
-    color: var(--color-accent);
+    border-color: var(--color-cyan);
+    color: var(--color-cyan);
+    box-shadow: 0 0 16px -6px var(--color-cyan);
   }
 
-  /* --- Underline that draws on hover --------------------- */
-  .rule-link {
+  /* --- Neon text ------------------------------------------ */
+  .neon-cyan {
+    color: var(--color-cyan);
+    text-shadow:
+      0 0 8px color-mix(in oklab, var(--color-cyan) 70%, transparent),
+      0 0 26px color-mix(in oklab, var(--color-cyan) 45%, transparent);
+  }
+  .neon-magenta {
+    color: var(--color-magenta);
+    text-shadow:
+      0 0 8px color-mix(in oklab, var(--color-magenta) 70%, transparent),
+      0 0 26px color-mix(in oklab, var(--color-magenta) 45%, transparent);
+  }
+  .neon-lime {
+    color: var(--color-lime);
+    text-shadow:
+      0 0 8px color-mix(in oklab, var(--color-lime) 70%, transparent),
+      0 0 26px color-mix(in oklab, var(--color-lime) 40%, transparent);
+  }
+
+  .grad-neon {
+    background: linear-gradient(
+      100deg,
+      var(--color-cyan),
+      var(--color-violet) 45%,
+      var(--color-magenta)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* --- Chromatic-aberration glitch on hover --------------- */
+  .glitch {
     position: relative;
-    color: var(--color-ink);
-    transition: color 0.3s ease;
+    display: inline-block;
   }
-  .rule-link::after {
-    content: "";
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
     position: absolute;
-    left: 0;
-    bottom: -2px;
-    width: 100%;
-    height: 1px;
-    background: currentColor;
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.45s var(--ease-out-expo);
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
   }
-  .rule-link:hover {
-    color: var(--color-accent);
+  .glitch::before {
+    color: var(--color-magenta);
+    transform: translate3d(-2px, 0, 0);
   }
-  .rule-link:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
+  .glitch::after {
+    color: var(--color-cyan);
+    transform: translate3d(2px, 0, 0);
+  }
+  .glitch:hover::before,
+  .glitch:hover::after {
+    opacity: 0.85;
   }
 }
 
@@ -260,52 +416,58 @@
 @layer utilities {
   .shell {
     width: 100%;
-    max-width: 78rem;
+    max-width: 80rem;
     margin-inline: auto;
-    padding-inline: clamp(1.25rem, 5vw, 4rem);
-  }
-
-  .shell-narrow {
-    width: 100%;
-    max-width: 52rem;
-    margin-inline: auto;
-    padding-inline: clamp(1.25rem, 5vw, 4rem);
+    padding-inline: clamp(1.25rem, 5vw, 3.5rem);
   }
 
   .section-pad {
-    padding-block: clamp(4.5rem, 11vh, 8rem);
+    padding-block: clamp(5rem, 12vh, 9rem);
   }
 
-  /* Paper grain — the only texture on the site */
-  .grain::before {
+  /* CRT scanlines — the single most "arcade" detail on the page */
+  .scanlines::after {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
-    z-index: 1;
-    opacity: 0.055;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index: 2;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0 2px,
+      rgb(0 0 0 / 0.18) 2px 3px
+    );
+  }
+
+  .vignette::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 45%,
+      color-mix(in oklab, var(--color-void) 85%, transparent) 100%
+    );
   }
 
   .edge-fade-x {
-    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
     -webkit-mask-image: linear-gradient(
       90deg,
       transparent,
-      #000 6%,
-      #000 94%,
+      #000 7%,
+      #000 93%,
       transparent
     );
   }
 
-  /* Column rules for the multi-column index */
-  .col-rule {
-    border-left: 1px solid var(--color-rule);
-  }
-
   .tnum {
     font-variant-numeric: tabular-nums;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
   }
 }
 
@@ -320,6 +482,11 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* Scanlines flicker for some people — drop them entirely. */
+  .scanlines::after {
+    display: none;
   }
 }
 

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState, type FormEvent } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { profile, socials } from "@/lib/data";
-import { SectionHead } from "@/components/ui/SectionHead";
+import { LevelHead } from "@/components/ui/LevelHead";
 import { Reveal } from "@/components/ui/Reveal";
 import { SocialIcon } from "@/components/ui/SocialIcon";
 import { cn } from "@/lib/utils";
@@ -11,9 +11,27 @@ import { cn } from "@/lib/utils";
 type Status = "idle" | "sending" | "sent" | "mailto" | "error";
 
 const FIELD =
-  "w-full border-b border-rule bg-transparent py-2.5 font-serif text-[0.9375rem] text-ink placeholder:text-ink-mute transition-colors duration-300 focus:border-accent focus:outline-none";
+  "w-full border border-violet/30 bg-violet/8 px-3.5 py-2.5 text-[0.925rem] text-ink placeholder:text-ink-faint transition-colors duration-300 focus:border-cyan focus:outline-none";
 
-export function BackPage() {
+/** A 10-second arcade continue countdown — decorative, never blocks anything. */
+function ContinueCounter() {
+  const [n, setN] = useState(9);
+  const reduced = useReducedMotion();
+
+  useEffect(() => {
+    if (reduced) return;
+    const id = window.setInterval(() => setN((v) => (v === 0 ? 9 : v - 1)), 1000);
+    return () => window.clearInterval(id);
+  }, [reduced]);
+
+  return (
+    <span className="font-display text-[clamp(2.5rem,7vw,4.5rem)] font-black leading-none text-magenta tabular-nums">
+      {n}
+    </span>
+  );
+}
+
+export function Continue() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
@@ -76,47 +94,49 @@ export function BackPage() {
   return (
     <section id="contact" className="section-pad relative">
       <div className="shell">
-        <SectionHead
-          num="07"
-          department="The Back Page"
-          label="Contact"
-          headline="Let's build something that ships."
-          lede="Open to internships, freelance work and research collaborations. Email is the fastest way to reach me."
-        />
+        <LevelHead num="07" tag="Continue?" label="Contact" />
 
-        {/* Email, set large */}
+        {/* Continue screen */}
         <Reveal>
-          <div className="mt-12 border-y border-rule py-8">
-            <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4">
-              <a
-                href={`mailto:${profile.email}`}
-                data-cursor="write"
-                className="group font-display text-[clamp(1.5rem,5.5vw,3.25rem)] font-bold tracking-[-0.03em] text-ink-hi transition-colors duration-300 hover:text-accent"
-              >
-                {profile.email}
-              </a>
+          <div className="panel brackets relative mt-9 flex flex-col items-center gap-4 p-8 text-center sm:p-12">
+            <p className="pixel pixel-cyan animate-blink">Continue?</p>
+            <ContinueCounter />
+            <h2 className="font-display text-[clamp(1.5rem,4.5vw,2.8rem)] font-black uppercase leading-tight tracking-tight">
+              Let&rsquo;s build something that ships.
+            </h2>
+            <p className="max-w-lg text-[0.975rem] leading-relaxed text-ink-dim">
+              Open to internships, freelance work and research collaborations. Email is
+              the fastest way to reach me.
+            </p>
 
-              <div className="flex shrink-0 gap-3">
-                <button onClick={copyEmail} className="btn btn-sm">
-                  {copied ? "Copied" : "Copy address"}
-                </button>
-                <a href={`mailto:${profile.email}`} className="btn btn-sm btn-solid">
-                  Open mail
-                </a>
-              </div>
+            <a
+              href={`mailto:${profile.email}`}
+              data-cursor="write"
+              className="neon-cyan mt-2 font-display text-[clamp(1rem,3.6vw,2rem)] font-black tracking-tight transition-opacity duration-300 hover:opacity-80"
+            >
+              {profile.email}
+            </a>
+
+            <div className="mt-3 flex flex-wrap justify-center gap-3">
+              <button onClick={copyEmail} className="btn btn-sm">
+                {copied ? "Copied" : "Copy address"}
+              </button>
+              <a href={`mailto:${profile.email}`} className="btn btn-sm btn-primary">
+                Open mail
+              </a>
             </div>
           </div>
         </Reveal>
 
-        <div className="mt-10 grid gap-12 lg:grid-cols-[1.25fr_1fr] lg:gap-20">
+        <div className="mt-10 grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
           {/* Form */}
           <Reveal>
             <form onSubmit={onSubmit}>
-              <p className="label label-accent">Or write from here</p>
+              <p className="pixel pixel-lime">Or write from here</p>
 
-              <div className="mt-6 grid gap-6 sm:grid-cols-2">
+              <div className="mt-5 grid gap-5 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="name" className="label block">
+                  <label htmlFor="name" className="hud mb-2 block">
                     Name
                   </label>
                   <input
@@ -131,7 +151,7 @@ export function BackPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="label block">
+                  <label htmlFor="email" className="hud mb-2 block">
                     Email
                   </label>
                   <input
@@ -147,8 +167,8 @@ export function BackPage() {
                 </div>
               </div>
 
-              <div className="mt-6">
-                <label htmlFor="subject" className="label block">
+              <div className="mt-5">
+                <label htmlFor="subject" className="hud mb-2 block">
                   Subject
                 </label>
                 <input
@@ -160,8 +180,8 @@ export function BackPage() {
                 />
               </div>
 
-              <div className="mt-6">
-                <label htmlFor="message" className="label block">
+              <div className="mt-5">
+                <label htmlFor="message" className="hud mb-2 block">
                   Message
                 </label>
                 <textarea
@@ -186,11 +206,11 @@ export function BackPage() {
                 className="pointer-events-none absolute left-[-9999px] h-0 w-0 opacity-0"
               />
 
-              <div className="mt-8 flex flex-wrap items-center gap-5">
+              <div className="mt-7 flex flex-wrap items-center gap-5">
                 <button
                   type="submit"
                   disabled={status === "sending"}
-                  className="btn disabled:cursor-not-allowed disabled:opacity-50"
+                  className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50"
                   data-cursor="send"
                 >
                   {status === "sending" ? "Sending…" : "Send message"}
@@ -203,7 +223,7 @@ export function BackPage() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="font-serif text-sm text-live"
+                      className="text-sm text-live"
                     >
                       Sent — I&rsquo;ll be in touch.
                     </motion.span>
@@ -214,7 +234,7 @@ export function BackPage() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="font-serif text-sm text-accent"
+                      className="text-sm text-cyan"
                     >
                       Opening your mail app…
                     </motion.span>
@@ -225,7 +245,7 @@ export function BackPage() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="font-serif text-sm text-flag"
+                      className="text-sm text-danger"
                     >
                       {error}
                     </motion.span>
@@ -237,46 +257,44 @@ export function BackPage() {
 
           {/* Elsewhere */}
           <Reveal delay={0.08}>
-            <div className="lg:border-l lg:border-rule lg:pl-14">
-              <p className="label label-accent">Elsewhere</p>
+            <div>
+              <p className="pixel pixel-magenta">Elsewhere</p>
 
-              <ul className="mt-6">
+              <ul className="mt-5 grid gap-2">
                 {socials.map((s) => (
-                  <li key={s.label} className="border-b border-rule">
+                  <li key={s.label}>
                     <a
                       href={s.href}
                       target={s.href.startsWith("http") ? "_blank" : undefined}
                       rel={s.href.startsWith("http") ? "noreferrer noopener" : undefined}
                       data-cursor="open"
-                      className="group flex items-center justify-between gap-4 py-4"
+                      className="group flex items-center justify-between gap-4 border border-violet/30 bg-violet/6 px-4 py-3.5 transition-colors duration-300 hover:border-cyan/70"
                     >
                       <span className="flex items-center gap-3">
                         <SocialIcon
                           name={s.icon}
-                          className="h-3.5 w-3.5 text-ink-mute transition-colors duration-300 group-hover:text-accent"
+                          className="h-4 w-4 text-ink-faint transition-colors duration-300 group-hover:text-cyan"
                         />
-                        <span className="font-display text-base font-bold text-ink-hi transition-colors duration-300 group-hover:text-accent">
+                        <span className="font-display text-sm font-black uppercase tracking-tight text-ink-hi transition-colors duration-300 group-hover:text-cyan">
                           {s.label}
                         </span>
                       </span>
-                      <span className="font-mono text-[11px] text-ink-mute">
-                        {s.handle}
-                      </span>
+                      <span className="text-[0.8rem] text-ink-faint">{s.handle}</span>
                     </a>
                   </li>
                 ))}
               </ul>
 
-              <div className="mt-8 space-y-2">
-                <p className="label flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-live" />
+              <div className="mt-7 space-y-2">
+                <p className="pixel pixel-lime flex items-center gap-2">
+                  <span className="h-2 w-2 bg-live" />
                   {profile.availability}
                 </p>
-                <p className="label">{profile.location}</p>
-                <p className="label">{profile.timezone}</p>
+                <p className="pixel">{profile.location}</p>
+                <p className="pixel">{profile.timezone}</p>
               </div>
 
-              <a href={profile.resume} download className="btn btn-sm mt-8 w-full">
+              <a href={profile.resume} download className="btn btn-sm mt-7 w-full">
                 Download résumé
               </a>
             </div>

@@ -15,28 +15,28 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0c0b0a",
+          background: "#05030f",
           padding: 64,
           position: "relative",
         }}
       >
-        {/* Folio rule */}
+        {/* Cabinet rail */}
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "baseline",
-            borderTop: "1px solid #3a332d",
+            borderTop: "1px solid #2a1f5c",
             paddingTop: 22,
             fontSize: 19,
             letterSpacing: 4,
             textTransform: "uppercase",
           }}
         >
-          <span style={{ display: "flex", color: "#e9a63c" }}>{profile.edition}</span>
-          <span style={{ display: "flex", color: "#8d8578" }}>{profile.role}</span>
-          <span style={{ display: "flex", color: "#8d8578" }}>
-            {profile.locationLine}
+          <span style={{ display: "flex", color: "#22e8ff" }}>{"Portfolio 2026"}</span>
+          <span style={{ display: "flex", color: "#6a6d9c" }}>{profile.role}</span>
+          <span style={{ display: "flex", color: "#6a6d9c" }}>
+            {profile.location}
           </span>
         </div>
 
@@ -47,7 +47,7 @@ export default function OpengraphImage() {
               fontSize: 148,
               fontWeight: 800,
               letterSpacing: -6,
-              color: "#fbf7f0",
+              color: "#ffffff",
               lineHeight: 0.86,
             }}
           >
@@ -59,9 +59,9 @@ export default function OpengraphImage() {
               fontSize: 148,
               fontWeight: 800,
               letterSpacing: -6,
-              color: "#e9a63c",
+              color: "#ff3d9a",
               lineHeight: 0.86,
-              fontStyle: "italic",
+              textTransform: "uppercase",
             }}
           >
             Patel
@@ -72,7 +72,7 @@ export default function OpengraphImage() {
           style={{
             display: "flex",
             flexDirection: "column",
-            borderTop: "1px solid #3a332d",
+            borderTop: "1px solid #2a1f5c",
             paddingTop: 22,
           }}
         >
@@ -80,7 +80,7 @@ export default function OpengraphImage() {
             style={{
               display: "flex",
               fontSize: 30,
-              color: "#bdb3a5",
+              color: "#9fa2cf",
               maxWidth: 900,
               lineHeight: 1.35,
             }}
@@ -93,7 +93,7 @@ export default function OpengraphImage() {
               marginTop: 16,
               fontSize: 19,
               letterSpacing: 3,
-              color: "#8d8578",
+              color: "#6a6d9c",
               textTransform: "uppercase",
             }}
           >

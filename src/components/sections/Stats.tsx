@@ -1,5 +1,5 @@
 import { profile } from "@/lib/data";
-import { SectionHead } from "@/components/ui/SectionHead";
+import { LevelHead } from "@/components/ui/LevelHead";
 import { Reveal } from "@/components/ui/Reveal";
 import { GithubMark } from "@/components/ui/SocialIcon";
 
@@ -23,6 +23,18 @@ type GhRepo = {
   forks_count: number;
   pushed_at: string;
   fork: boolean;
+};
+
+const LANG_COLOR: Record<string, string> = {
+  Python: "#3572A5",
+  JavaScript: "#f1e05a",
+  TypeScript: "#3178c6",
+  Java: "#b07219",
+  HTML: "#e34c26",
+  CSS: "#563d7c",
+  "C++": "#f34b7d",
+  C: "#8d8fa8",
+  "Jupyter Notebook": "#DA5B0B",
 };
 
 /* ------------------------------- data fetch ------------------------------- */
@@ -80,9 +92,15 @@ async function getGithub() {
       )
       .slice(0, 4);
 
-    const since = new Date(user.created_at).getFullYear();
-
-    return { user, stars, forks, languages, top, repoCount: own.length, since };
+    return {
+      user,
+      stars,
+      forks,
+      languages,
+      top,
+      repoCount: own.length,
+      since: new Date(user.created_at).getFullYear(),
+    };
   } catch {
     return null;
   }
@@ -90,29 +108,29 @@ async function getGithub() {
 
 /* -------------------------------- section -------------------------------- */
 
-export async function DataDesk() {
+export async function Stats() {
   const data = await getGithub();
   const profileUrl = `https://github.com/${profile.githubUser}`;
 
   return (
-    <section id="numbers" className="section-pad relative">
+    <section id="stats" className="section-pad relative">
       <div className="shell">
-        <SectionHead
+        <LevelHead
           num="04"
-          department="Data Desk"
-          label="By the Numbers"
-          headline="The public record."
-          lede="Read live from the GitHub API and refreshed hourly. If the numbers look modest, that's because they're real."
+          tag="Stats"
+          label="GitHub"
+          headline="The public scoreboard."
+          lede="Read live from the GitHub API and refreshed hourly. Nothing here is typed in by hand — if the numbers look modest, that's because they're real."
         />
 
         {!data ? (
           <Reveal>
-            <div className="mt-12 flex flex-col items-start justify-between gap-5 border-y border-rule py-8 sm:flex-row sm:items-center">
+            <div className="panel brackets relative mt-12 flex flex-col items-start justify-between gap-5 p-7 sm:flex-row sm:items-center">
               <div>
-                <p className="font-display text-lg font-bold text-ink-hi">
-                  Live figures unavailable
+                <p className="font-display text-lg font-black uppercase text-gold">
+                  Connection lost
                 </p>
-                <p className="mt-1.5 font-serif text-[0.9375rem] text-ink-dim">
+                <p className="mt-1.5 text-[0.95rem] text-ink-dim">
                   The GitHub API is rate-limited or unreachable right now. The profile
                   itself is always current.
                 </p>
@@ -130,73 +148,75 @@ export async function DataDesk() {
           </Reveal>
         ) : (
           <>
-            {/* Figures */}
+            {/* Score panel */}
             <Reveal>
-              <dl className="mt-12 grid grid-cols-2 gap-px border border-rule bg-rule lg:grid-cols-4">
+              <dl className="mt-12 grid grid-cols-2 gap-3 lg:grid-cols-4">
                 {[
-                  { label: "Public repositories", value: data.repoCount },
-                  { label: "Stars earned", value: data.stars },
-                  { label: "Forks", value: data.forks },
-                  { label: "Followers", value: data.user.followers },
+                  { label: "Repos", value: data.repoCount, color: "text-cyan" },
+                  { label: "Stars", value: data.stars, color: "text-gold" },
+                  { label: "Forks", value: data.forks, color: "text-lime" },
+                  { label: "Followers", value: data.user.followers, color: "text-magenta" },
                 ].map((f) => (
-                  <div key={f.label} className="bg-paper px-5 py-7">
-                    <dt className="label">{f.label}</dt>
-                    <dd className="mt-3 font-display text-[clamp(2rem,4vw,2.75rem)] font-black leading-none tabular-nums text-ink-hi">
-                      {f.value}
+                  <div key={f.label} className="panel brackets relative px-5 py-6">
+                    <dt className="pixel">{f.label}</dt>
+                    <dd
+                      className={`mt-3 font-display text-[clamp(1.9rem,4.5vw,3rem)] font-black leading-none tabular-nums ${f.color}`}
+                    >
+                      {String(f.value).padStart(2, "0")}
                     </dd>
                   </div>
                 ))}
               </dl>
             </Reveal>
 
-            <div className="mt-10 grid gap-10 lg:grid-cols-2 lg:gap-16">
-              {/* Language table */}
+            <div className="mt-4 grid gap-4 lg:grid-cols-2">
+              {/* Language bars */}
               <Reveal>
-                <div>
-                  <div className="flex items-baseline justify-between border-b border-rule pb-3">
-                    <h3 className="font-display text-lg font-bold">Language mix</h3>
-                    <span className="label">@{profile.githubUser}</span>
+                <div className="panel h-full p-6">
+                  <div className="flex items-baseline justify-between border-b border-violet/30 pb-3">
+                    <h3 className="hud text-cyan">Language mix</h3>
+                    <span className="pixel">@{profile.githubUser}</span>
                   </div>
 
                   {data.languages.length === 0 ? (
-                    <p className="mt-5 font-serif text-[0.9375rem] text-ink-dim">
+                    <p className="mt-5 text-[0.9rem] text-ink-dim">
                       No language data published yet.
                     </p>
                   ) : (
-                    <table className="mt-2 w-full">
+                    <table className="mt-5 w-full">
                       <caption className="sr-only">
-                        Share of repositories by primary language
+                        Share of public repositories by primary language
                       </caption>
-                      <thead>
-                        <tr className="border-b border-rule">
-                          <th scope="col" className="label py-2.5 text-left font-medium">
-                            Language
-                          </th>
-                          <th scope="col" className="label py-2.5 text-right font-medium">
-                            Share
-                          </th>
-                        </tr>
-                      </thead>
                       <tbody>
                         {data.languages.map((l) => (
-                          <tr key={l.name} className="border-b border-rule">
+                          <tr key={l.name}>
                             <th
                               scope="row"
-                              className="py-3.5 text-left font-serif text-[0.9375rem] font-normal text-ink"
+                              className="py-2.5 pr-4 text-left text-[0.9rem] font-medium text-ink"
                             >
                               {l.name}
                             </th>
-                            <td className="py-3.5">
-                              <div className="flex items-center justify-end gap-4">
-                                <span
-                                  aria-hidden
-                                  className="hidden h-px bg-accent sm:block"
-                                  style={{ width: `${Math.max(4, l.share * 0.9)}%` }}
-                                />
-                                <span className="font-mono text-[11px] tabular-nums text-ink-dim">
-                                  {l.share}%
-                                </span>
+                            <td className="w-full py-2.5">
+                              {/* Segmented bar — reads as an arcade power meter */}
+                              <div className="flex gap-[3px]">
+                                {Array.from({ length: 20 }).map((_, i) => (
+                                  <span
+                                    key={i}
+                                    className="h-3 flex-1"
+                                    style={{
+                                      background:
+                                        i < Math.round((l.share / 100) * 20)
+                                          ? LANG_COLOR[l.name] ?? "var(--color-cyan)"
+                                          : "color-mix(in oklab, var(--color-violet) 20%, transparent)",
+                                    }}
+                                  />
+                                ))}
                               </div>
+                            </td>
+                            <td className="py-2.5 pl-4 text-right">
+                              <span className="font-display text-[11px] font-bold tabular-nums text-ink-dim">
+                                {l.share}%
+                              </span>
                             </td>
                           </tr>
                         ))}
@@ -204,24 +224,24 @@ export async function DataDesk() {
                     </table>
                   )}
 
-                  <p className="mt-4 font-serif text-sm leading-relaxed text-ink-mute">
-                    Share of public repositories by primary language. Active on GitHub
-                    since {data.since}.
+                  <p className="mt-5 text-sm leading-relaxed text-ink-faint">
+                    Share of public repositories by primary language. On GitHub since{" "}
+                    {data.since}.
                   </p>
                 </div>
               </Reveal>
 
-              {/* Repositories */}
+              {/* Repos */}
               <Reveal delay={0.06}>
-                <div>
-                  <div className="flex items-baseline justify-between border-b border-rule pb-3">
-                    <h3 className="font-display text-lg font-bold">Repositories</h3>
-                    <span className="label">Most recent</span>
+                <div className="panel h-full p-6">
+                  <div className="flex items-baseline justify-between border-b border-violet/30 pb-3">
+                    <h3 className="hud text-magenta">Repositories</h3>
+                    <span className="pixel">Recent</span>
                   </div>
 
                   <ul>
                     {data.top.map((repo) => (
-                      <li key={repo.id} className="border-b border-rule">
+                      <li key={repo.id} className="border-b border-violet/20">
                         <a
                           href={repo.html_url}
                           target="_blank"
@@ -230,14 +250,12 @@ export async function DataDesk() {
                           className="group block py-4"
                         >
                           <div className="flex items-baseline justify-between gap-4">
-                            <span className="font-display text-base font-bold text-ink-hi transition-colors duration-300 group-hover:text-accent">
+                            <span className="font-display text-sm font-black uppercase tracking-tight text-ink-hi transition-colors duration-300 group-hover:text-cyan">
                               {repo.name}
                             </span>
-                            <span className="label shrink-0">
-                              {repo.language ?? "—"}
-                            </span>
+                            <span className="pixel shrink-0">{repo.language ?? "—"}</span>
                           </div>
-                          <p className="mt-1.5 font-serif text-sm leading-relaxed text-ink-dim">
+                          <p className="mt-1.5 text-sm leading-relaxed text-ink-dim">
                             {repo.description ?? "No description provided."}
                           </p>
                         </a>
@@ -249,11 +267,11 @@ export async function DataDesk() {
                     href={profileUrl}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="label mt-5 inline-flex items-center gap-2 transition-colors duration-300 hover:text-accent"
+                    className="hud mt-5 inline-flex items-center gap-2 transition-colors duration-300 hover:text-cyan"
                     data-cursor="open"
                   >
                     <GithubMark className="h-3 w-3" />
-                    Every repository on GitHub
+                    All repositories
                   </a>
                 </div>
               </Reveal>

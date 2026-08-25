@@ -6,8 +6,8 @@ import { motion, useMotionValue, useSpring } from "framer-motion";
 const INTERACTIVE = 'a, button, [role="button"], input, textarea, select, [data-cursor]';
 
 /**
- * A single hairline ring with a small centre dot — deliberately quiet, so it
- * reads as a print registration mark rather than a game reticle.
+ * A targeting reticle: four corner brackets that close in on interactive
+ * elements, plus a centre pip. Reads as a crosshair rather than a dot.
  */
 export function Cursor() {
   const [enabled, setEnabled] = useState(false);
@@ -15,10 +15,10 @@ export function Cursor() {
   const [label, setLabel] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
 
-  const dotX = useMotionValue(-100);
-  const dotY = useMotionValue(-100);
-  const ringX = useSpring(dotX, { stiffness: 420, damping: 34, mass: 0.4 });
-  const ringY = useSpring(dotY, { stiffness: 420, damping: 34, mass: 0.4 });
+  const x = useMotionValue(-100);
+  const y = useMotionValue(-100);
+  const rx = useSpring(x, { stiffness: 400, damping: 32, mass: 0.42 });
+  const ry = useSpring(y, { stiffness: 400, damping: 32, mass: 0.42 });
 
   const rafRef = useRef<number | null>(null);
 
@@ -31,26 +31,26 @@ export function Cursor() {
 
     document.documentElement.dataset.cursor = "custom";
 
-    let nextX = 0;
-    let nextY = 0;
+    let nx = 0;
+    let ny = 0;
 
     const flush = () => {
-      dotX.set(nextX);
-      dotY.set(nextY);
+      x.set(nx);
+      y.set(ny);
       rafRef.current = null;
     };
 
     const onMove = (e: PointerEvent) => {
-      nextX = e.clientX;
-      nextY = e.clientY;
+      nx = e.clientX;
+      ny = e.clientY;
       setVisible(true);
       if (rafRef.current === null) rafRef.current = requestAnimationFrame(flush);
     };
 
     const onOver = (e: PointerEvent) => {
-      const target = (e.target as HTMLElement)?.closest?.(INTERACTIVE) as HTMLElement | null;
-      setHovering(Boolean(target));
-      setLabel(target?.dataset?.cursor || null);
+      const t = (e.target as HTMLElement)?.closest?.(INTERACTIVE) as HTMLElement | null;
+      setHovering(Boolean(t));
+      setLabel(t?.dataset?.cursor || null);
     };
 
     const onLeave = () => setVisible(false);
@@ -66,33 +66,60 @@ export function Cursor() {
       window.removeEventListener("pointerover", onOver);
       document.removeEventListener("pointerleave", onLeave);
     };
-  }, [dotX, dotY]);
+  }, [x, y]);
 
   if (!enabled) return null;
 
+  const size = label ? 78 : hovering ? 44 : 26;
+
+  const corners = [
+    { cls: "left-0 top-0 border-l-2 border-t-2" },
+    { cls: "right-0 top-0 border-r-2 border-t-2" },
+    { cls: "bottom-0 left-0 border-b-2 border-l-2" },
+    { cls: "bottom-0 right-0 border-b-2 border-r-2" },
+  ];
+
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-[9999]">
+      {/* Reticle */}
       <motion.div
-        className="absolute left-0 top-0 flex items-center justify-center rounded-full border border-accent"
-        style={{ x: ringX, y: ringY, translateX: "-50%", translateY: "-50%" }}
+        className="absolute left-0 top-0 flex items-center justify-center"
+        style={{ x: rx, y: ry, translateX: "-50%", translateY: "-50%" }}
         animate={{
-          width: label ? 74 : hovering ? 40 : 26,
-          height: label ? 74 : hovering ? 40 : 26,
-          opacity: visible ? (hovering || label ? 1 : 0.55) : 0,
-          backgroundColor: label ? "rgba(233,166,60,0.10)" : "rgba(233,166,60,0)",
+          width: size,
+          height: size,
+          opacity: visible ? 1 : 0,
+          rotate: hovering ? 45 : 0,
         }}
-        transition={{ type: "spring", stiffness: 450, damping: 36, mass: 0.5 }}
+        transition={{ type: "spring", stiffness: 420, damping: 34, mass: 0.5 }}
       >
+        {corners.map((c) => (
+          <span
+            key={c.cls}
+            className={`absolute h-2 w-2 border-cyan ${c.cls}`}
+            style={{ boxShadow: "0 0 8px -1px var(--color-cyan)" }}
+          />
+        ))}
         {label ? (
-          <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-accent">
+          <span
+            className="font-display text-[8px] font-bold uppercase tracking-[0.16em] text-cyan"
+            style={{ transform: hovering ? "rotate(-45deg)" : undefined }}
+          >
             {label}
           </span>
         ) : null}
       </motion.div>
 
+      {/* Centre pip */}
       <motion.div
-        className="absolute left-0 top-0 h-[3px] w-[3px] rounded-full bg-accent"
-        style={{ x: dotX, y: dotY, translateX: "-50%", translateY: "-50%" }}
+        className="absolute left-0 top-0 h-[3px] w-[3px] bg-magenta"
+        style={{
+          x,
+          y,
+          translateX: "-50%",
+          translateY: "-50%",
+          boxShadow: "0 0 8px 1px var(--color-magenta)",
+        }}
         animate={{ opacity: visible && !label ? 1 : 0 }}
         transition={{ duration: 0.15 }}
       />
